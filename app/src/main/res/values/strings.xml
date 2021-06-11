@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">GymApp</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="mail_icon" />
+    <string name="email">Email...</string>
+    <string name="password_icon">password_icon</string>
+    <string name="password">Password...</string>
+    <string name="login">LOGIN</string>
+    <string name="new_user_register_here">New user? Register here</string>
+    <string name="logo_icon">logo_icon</string>
+    <string name="welcome">Your id is %Ss1</string>
+    <string name="register">REGISTER</string>
+    <string name="arm1">arm1</string>
+    <string name="arm2">arm2</string>
+
+    //Errors
+    <string name="dif_passwords">The passwords are different</string>
+    <string name="terms">You did not accept the terms and conditions</string>
+
+
+    <string name="imageshow">imageShow</string>
+    <string name="textview">TextView</string>
+    <string name="coins_icon">coins_icon</string>
+    <string name="news_icon">news_icon</string>
+    <string name="logout">LOGOUT</string>
+    <string name="logout_icon">logout_icon</string>
+    <string name="settings">SETTINGS</string>
+    <string name="settings_icon">settings_icon</string>
+    <string name="gallery_icon">gallery_icon</string>
+    <string name="gallery">GALLERY</string>
+    <string name="news">NEWS</string>
+    <string name="shop">SHOP</string>
+    <string name="profile">PROFILE</string>
+    <string name="_0">0</string>
+    <string name="shop_icon">shop_icon</string>
+    <string name="profile_icon">profile_icon</string>
+    <string name="slideshow">slideShow</string>
+    <string name="cover_photo">cover_photo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="name_surname">Name Surname</string>
+    <string name="instagram">Instagram(optional)</string>
+    <string name="nickname">Nickname</string>
+    <string name="edit">EDIT</string>
+    <string name="change_password">Change password</string>
+    <string name="birth_icon">birth_icon</string>
+    <string name="insta_icon">insta_icon</string>
+    <string name="username">username</string>
+    <string name="birthday_dd_mm_yyyy">Birthday(DD/MM/YYYY)</string>
+    <string name="edit_profile">EDIT PROFILE</string>
+    <string name="name">Name</string>
+    <string name="balance">Balance: %1$d</string>
+</resources>
