@@ -92,7 +92,8 @@ class ProfileActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         val dpd = DatePickerDialog(this@ProfileActivity, { view, year, monthOfYear, dayOfMonth ->
-            binding.rBirthdateTV.setText("" + dayOfMonth + "/" + monthOfYear + "/" + year)
+            val mAux = monthOfYear+1
+            binding.rBirthdateTV.text=("" + dayOfMonth + "/" + monthOfYear + "/" + year)
         }, year, month, day)
 
         dpd.show()

@@ -51,7 +51,8 @@ class RegisterActivity : AppCompatActivity() {
         val dpd = DatePickerDialog(
             this@RegisterActivity,
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                binding.birthdateTV.setText("" + dayOfMonth + "/" + monthOfYear + "/" + year)
+                val mAux = monthOfYear+1
+                binding.birthdateTV.setText("" + dayOfMonth + "/" + mAux + "/" + year)
             },
             year,
             month,
