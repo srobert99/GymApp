@@ -1,4 +1,4 @@
-package com.example.gymapp.menu.profile
+package com.example.gymapp.menu
 
 
 data class User(
@@ -9,4 +9,5 @@ data class User(
     var phoneNumber: String = "",
     var instagram: String = "",
     var balance: Int = 0,
+    var uid:String=""
 )

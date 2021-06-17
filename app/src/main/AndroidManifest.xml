@@ -11,10 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GymApp">
+        <activity android:name=".menu.profile.search_user.SearchUserActivity"></activity>
+        <activity android:name=".menu.profile.search_user.SearchUser" />
+        <activity android:name=".menu.allusers.AllUsers" />
         <activity
             android:name=".menu.profile.ProfileActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".firebase_auth.RegisterActivity"></activity>
+        <activity android:name=".firebase_auth.RegisterActivity" />
         <activity android:name=".firebase_auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

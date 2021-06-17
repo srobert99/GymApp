@@ -6,12 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.gymapp.databinding.ActivityMainBinding
 import com.example.gymapp.firebase_auth.LoginActivity
 import com.example.gymapp.menu.profile.ProfileActivity
-import com.example.gymapp.menu.profile.User
+import com.example.gymapp.menu.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -77,6 +76,9 @@ class MainActivity : AppCompatActivity() {
                     .load(uri)
                     .into(binding.profileImage)
             }
+            if(user!!.uid.isEmpty()){
+                db.update("uid",id)
+            }
             loading()
         }.addOnFailureListener {
             Toast.makeText(this@MainActivity, "Error getting user data", Toast.LENGTH_SHORT).show()
@@ -84,5 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 
 }

@@ -1,41 +1,26 @@
 package com.example.gymapp.menu.profile
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.View
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.example.gymapp.R
 import com.example.gymapp.databinding.ActivityProfileBinding
+import com.example.gymapp.menu.User
+import com.example.gymapp.menu.profile.search_user.SearchUserActivity
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.okhttp.Dispatcher
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import java.lang.Exception
-import java.lang.Math.abs
-import java.text.SimpleDateFormat
-import java.time.Year
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -52,9 +37,6 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.backButton.setOnClickListener {
-            finish()
-        }
 
 
         auth = FirebaseAuth.getInstance()
@@ -80,6 +62,10 @@ class ProfileActivity : AppCompatActivity() {
             if (editImage) {
                 pickImage2()
             }
+        }
+
+        binding.searchUserTV.setOnClickListener {
+            startActivity(Intent(this, SearchUserActivity::class.java))
         }
 
 
@@ -171,14 +157,13 @@ class ProfileActivity : AppCompatActivity() {
 
         if (binding.instaET.text.toString().isNotEmpty()) {
             insta = binding.instaET.text.toString()
+            binding.instaET.visibility=View.VISIBLE
         }
 
-        DB.set(User(nickname, name, surname, birthdate[0], phoneNumber, insta, balance))
+        DB.set(User(nickname, name, surname, birthdate[0], phoneNumber, insta, balance,id))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this@ProfileActivity, "Succes", Toast.LENGTH_SHORT).show()
-                    getData()
-                    getImages()
                 } else {
                     Toast.makeText(
                         this@ProfileActivity,
@@ -289,6 +274,7 @@ class ProfileActivity : AppCompatActivity() {
         getImages()
         getData()
         loading()
+
 
     }
 
