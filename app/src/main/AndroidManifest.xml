@@ -11,9 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GymApp">
-        <activity android:name=".menu.profile.search_user.SearchUserActivity"></activity>
-        <activity android:name=".menu.profile.search_user.SearchUser" />
-        <activity android:name=".menu.allusers.AllUsers" />
+        <activity android:name=".menu.profile.search_user.UserActivity"></activity>
+        <activity
+            android:name=".menu.profile.search_user.UserProfile"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/Theme.GymApp.NoActionBar" />
+        <activity
+            android:name=".menu.profile.search_user.SearchUserActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".menu.profile.ProfileActivity"
             android:parentActivityName=".MainActivity" />

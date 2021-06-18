@@ -1,5 +1,6 @@
 package com.example.gymapp.menu.profile.search_user
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -44,6 +45,7 @@ class SearchUserActivity : AppCompatActivity() {
         binding.profileTV.setOnClickListener {
             finish()
         }
+
     }
 
 
@@ -66,4 +68,16 @@ class SearchUserActivity : AppCompatActivity() {
         binding.usersRV.adapter = adapter
     }
 
+    fun showUser(user:com.example.gymapp.menu.User){
+        val intent = Intent(this@SearchUserActivity,UserActivity::class.java)
+        intent.putExtra("userUID",user.uid)
+        startActivity(intent)
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+    }
+
 }
+

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
+import com.example.gymapp.R
 import com.example.gymapp.databinding.ActivityProfileBinding
 import com.example.gymapp.menu.User
 import com.example.gymapp.menu.profile.search_user.SearchUserActivity
@@ -66,6 +67,7 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.searchUserTV.setOnClickListener {
             startActivity(Intent(this, SearchUserActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
 

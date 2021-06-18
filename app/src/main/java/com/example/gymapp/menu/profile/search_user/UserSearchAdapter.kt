@@ -10,6 +10,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gymapp.R
@@ -54,6 +55,11 @@ class UserSearchAdapter(val context: Context, val users: MutableList<User>) :
                 .into(holder.itemView.findViewById<ImageView>(R.id.sProfileImage))
         }.addOnFailureListener { e->
             Log.d(TAG,e.message.toString())
+        }
+        holder.itemView.findViewById<CardView>(R.id.userCardView).setOnClickListener {
+            if(context is SearchUserActivity){
+                context.showUser(curUser)
+            }
         }
 
     }
