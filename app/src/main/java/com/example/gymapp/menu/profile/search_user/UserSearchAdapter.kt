@@ -14,9 +14,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gymapp.R
-import com.example.gymapp.menu.User
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.gymapp.local_data_base.User
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 

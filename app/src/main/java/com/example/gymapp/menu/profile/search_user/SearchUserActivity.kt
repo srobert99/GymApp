@@ -4,13 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Adapter
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gymapp.R
-import com.example.gymapp.databinding.ActivityMainBinding
 import com.example.gymapp.databinding.ActivitySearchUserBinding
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -22,7 +19,7 @@ class SearchUserActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchUserBinding
     private val usersCollectionRef = Firebase.firestore.collection("Users")
     private lateinit var mStoreRef: StorageReference
-    private var users = mutableListOf<com.example.gymapp.menu.User>()
+    private var users = mutableListOf<com.example.gymapp.local_data_base.User>()
     private lateinit var adapter: UserSearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +65,7 @@ class SearchUserActivity : AppCompatActivity() {
         binding.usersRV.adapter = adapter
     }
 
-    fun showUser(user:com.example.gymapp.menu.User){
+    fun showUser(user: com.example.gymapp.local_data_base.User){
         val intent = Intent(this@SearchUserActivity,UserActivity::class.java)
         intent.putExtra("userUID",user.uid)
         startActivity(intent)

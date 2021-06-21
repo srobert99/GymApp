@@ -9,9 +9,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
+import com.example.gymapp.Helpers
 import com.example.gymapp.R
 import com.example.gymapp.databinding.ActivityProfileBinding
-import com.example.gymapp.menu.User
+import com.example.gymapp.firebase_database.FDB
+import com.example.gymapp.local_data_base.User
 import com.example.gymapp.menu.profile.search_user.SearchUserActivity
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
@@ -27,40 +29,36 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
     private lateinit var auth: FirebaseAuth
-    private val usersCollectionRef = Firebase.firestore.collection("Users")
-    private var fileUri: Uri? = null
-    private lateinit var mStoreRef: StorageReference
-    private var editImage = false
+    private var editable = false
     private var balance = 0
+    private lateinit var FBDB: FDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         auth = FirebaseAuth.getInstance()
-        mStoreRef = FirebaseStorage.getInstance().getReference()
+        loading()
+        FBDB = FDB(auth.currentUser!!.uid, this@ProfileActivity)
 
 
         binding.editPB.setOnClickListener {
             updateUser()
         }
-
         binding.rBirthdateTV.setOnClickListener {
-            if (editImage) {
+            if (editable) {
                 selectDate()
             }
         }
         binding.profileImage.setOnClickListener {
-            if (editImage) {
+            if (editable) {
                 pickImage1()
             }
         }
 
         binding.coverImage.setOnClickListener {
-            if (editImage) {
+            if (editable) {
                 pickImage2()
             }
         }
@@ -80,23 +78,25 @@ class ProfileActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         val dpd = DatePickerDialog(this@ProfileActivity, { view, year, monthOfYear, dayOfMonth ->
-            val mAux = monthOfYear+1
-            binding.rBirthdateTV.text=("" + dayOfMonth + "/" + monthOfYear + "/" + year)
+            val mAux = monthOfYear + 1
+            binding.rBirthdateTV.text = ("" + dayOfMonth + "/" + monthOfYear + "/" + year)
         }, year, month, day)
 
         dpd.show()
     }
 
 
-    private fun setProfileView(user: User) {
-        binding.nickET.setText(user.nickname)
-        binding.nameET.setText(user.name)
-        binding.surnameET.setText(user.surname)
-        binding.phoneNumberET.setText(user.phoneNumber)
-        binding.rBirthdateTV.setText(user.birthDate + " (" + getAge(user) + ")")
+    fun setProfileView(user: User) {
+        binding.nickET.setText(user!!.nickname)
+        binding.nameET.setText(user!!.name)
+        binding.surnameET.setText(user!!.surname)
+        binding.phoneNumberET.setText(user!!.phoneNumber)
+        binding.rBirthdateTV.setText(
+            user!!.birthDate + " (" + Helpers.getAge(user.birthDate).toString() + ")"
+        )
 
         if (user.instagram!!.isNotEmpty()) {
-            binding.instaET.setText(user.instagram)
+            binding.instaET.setText(user!!.instagram)
             binding.instaET.visibility = View.VISIBLE
         }
     }
@@ -104,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateUser() {
         if (binding.editPB.text == "EDIT PROFILE") {
-            editImage = true
+            editable = true
             binding.editPB.text = "CONFIRM"
             binding.nameET.isEnabled = true
             binding.surnameET.isEnabled = true
@@ -113,7 +113,7 @@ class ProfileActivity : AppCompatActivity() {
             binding.instaET.visibility = View.VISIBLE
             binding.phoneNumberET.visibility = View.VISIBLE
         } else {
-            editImage = false
+            editable = false
             binding.editPB.text = "EDIT PROFILE"
             binding.nameET.isEnabled = false
             binding.surnameET.isEnabled = false
@@ -126,30 +126,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
-    private fun getAge(user: User): String {
-        val aux = user.birthDate.split("/")
-        val c = Calendar.getInstance()
-        val y = c.get(Calendar.YEAR)
-        val m = c.get(Calendar.MONTH)
-        val d = c.get(Calendar.DAY_OF_MONTH)
-
-        var ydiff = y - aux[2].toInt()
-
-        if (aux[1].toInt() > m) {
-            ydiff--
-        } else if (aux[1].toInt() == m) {
-            if (aux[0].toInt() > d) {
-                ydiff--
-            }
-        }
-        return ydiff.toString()
-
-    }
-
-
     private fun updateUserDB() {
         val id = auth.currentUser!!.uid
-        val DB = usersCollectionRef.document(id)
         val nickname = binding.nickET.text.toString()
         val name = binding.nameET.text.toString()
         val surname = binding.surnameET.text.toString()
@@ -159,21 +137,10 @@ class ProfileActivity : AppCompatActivity() {
 
         if (binding.instaET.text.toString().isNotEmpty()) {
             insta = binding.instaET.text.toString()
-            binding.instaET.visibility=View.VISIBLE
+            binding.instaET.visibility = View.VISIBLE
         }
 
-        DB.set(User(nickname, name, surname, birthdate[0], phoneNumber, insta, balance,id))
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this@ProfileActivity, "Succes", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(
-                        this@ProfileActivity,
-                        task.exception?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
+        FBDB.updateUser(User(nickname, name, surname,birthdate[0],phoneNumber,insta,balance,uid=id))
 
 
     }
@@ -199,85 +166,41 @@ class ProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == 1) {
-            fileUri = data!!.data
-            binding.profileImage.setImageURI(fileUri)
-            uploadPicture(requestCode)
-
-        } else if (resultCode == RESULT_OK && requestCode == 2) {
-            fileUri = data!!.data
-            binding.coverImage.setImageURI(fileUri)
-            uploadPicture(requestCode)
-        }
-    }
-
-
-    private fun uploadPicture(request: Int) {
-        var child1 = ""
-        val id = auth.currentUser!!.uid
-        if (request == 1) {
-            child1 = "profile"
-        } else {
-            child1 = "cover"
-        }
-        var profilePic = mStoreRef.child("images").child(child1).child(id)
-
-        if (fileUri != null) {
-            profilePic.putFile(fileUri!!)
-        }
-    }
-
-    private fun getData() {
-        val id = auth.currentUser!!.uid
-        val DB = usersCollectionRef.document(id)
-
-        DB.get().addOnSuccessListener { documentSnapshot ->
-            val user = documentSnapshot.toObject<User>()!!
-            balance = user.balance
-            setProfileView(user)
-        }.addOnFailureListener { error ->
-            Toast.makeText(this@ProfileActivity, error.message, Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    private fun getImages() {
-        val id = auth.currentUser!!.uid
-        mStoreRef.child("images").child("profile")
-            .child(id).downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(this)
-                    .load(uri)
-                    .into(binding.profileImage)
-            }.addOnFailureListener { listener ->
+            val profileImage = data!!.data
+            if (profileImage != null) {
+                binding.profileImage.setImageURI(profileImage)
+                FBDB.uploadPictures(requestCode,profileImage)
             }
-
-        mStoreRef.child("images").child("cover").child(id).downloadUrl.addOnSuccessListener { uri ->
-            Glide.with(this)
-                .load(uri)
-                .into(binding.coverImage)
-        }.addOnFailureListener { listener ->
+        } else if (resultCode == RESULT_OK && requestCode == 2) {
+            val coverImage = data!!.data
+            if (coverImage != null) {
+                binding.coverImage.setImageURI(coverImage)
+                FBDB.uploadPictures(requestCode,coverImage)
+            }
         }
+    }
+
+
+    fun setImages(profilePicture: Uri, coverImage: Uri) {
+        Glide.with(this)
+            .load(profilePicture)
+            .into(binding.profileImage)
+
+        Glide.with(this)
+            .load(coverImage)
+            .into(binding.coverImage)
+        loading()
     }
 
 
     private fun loading() {
-        if (!binding.progressBar3.isVisible) {
+        if (binding.progressBar3.isVisible) {
             binding.progressBar3.visibility = View.VISIBLE
             binding.profileLayout.visibility = View.INVISIBLE
         } else {
             binding.progressBar3.visibility = View.GONE
             binding.profileLayout.visibility = View.VISIBLE
         }
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        loading()
-        getImages()
-        getData()
-        loading()
-
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.gymapp.menu
+package com.example.gymapp.local_data_base
 
 
 data class User(

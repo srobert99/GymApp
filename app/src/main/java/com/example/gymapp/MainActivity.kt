@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.gymapp.databinding.ActivityMainBinding
 import com.example.gymapp.firebase_auth.LoginActivity
 import com.example.gymapp.menu.profile.ProfileActivity
-import com.example.gymapp.menu.User
+import com.example.gymapp.local_data_base.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        loading()
         super.onStart()
         val id = auth.currentUser!!.uid
         val db = usersCollectionRef.document(id)
+        loading()
 
         db.get().addOnSuccessListener { documentSnapshot ->
             val user = documentSnapshot.toObject<User>()
@@ -72,21 +72,23 @@ class MainActivity : AppCompatActivity() {
             binding.balance.setText(getString(R.string.balance, user?.balance))
             mStoreRef.child("images").child("profile")
                 .child(id).downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(this@MainActivity)
-                    .load(uri)
-                    .into(binding.profileImage)
+                    Glide.with(this@MainActivity)
+                        .load(uri)
+                        .into(binding.profileImage)
+                    loading()
+                }.addOnFailureListener {
+                    loading()
+                }
+
+            if (user!!.uid.isEmpty()) {
+                db.update("uid", id)
             }
-            if(user!!.uid.isEmpty()){
-                db.update("uid",id)
-            }
-            loading()
         }.addOnFailureListener {
             Toast.makeText(this@MainActivity, "Error getting user data", Toast.LENGTH_SHORT).show()
             loading()
         }
 
     }
-
 
 
 }
