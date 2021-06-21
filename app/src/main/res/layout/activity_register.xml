@@ -24,7 +24,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/rElements"
             android:layout_width="match_parent"
-            android:layout_height="661dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:background="@color/white">
 
@@ -37,6 +37,7 @@
                 android:ems="10"
                 android:hint="Confirm password"
                 android:inputType="textPassword"
+                android:textColor="@color/black"
                 android:textColorHint="@color/hint_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.504"
@@ -88,6 +89,7 @@
                 android:ems="10"
                 android:hint="Surname"
                 android:inputType="textPersonName"
+                android:textColor="@color/black"
                 android:textColorHint="@color/hint_color"
                 app:layout_constraintBottom_toBottomOf="@+id/nameET"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -218,7 +220,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/text_background"
+                android:hint="Birthdate"
                 android:textColor="@color/black"
+                android:textColorHint="@color/hint_color"
                 app:layout_constraintEnd_toEndOf="@+id/emailET"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/emailET"
@@ -233,6 +237,7 @@
                 android:ems="10"
                 android:hint="@string/password"
                 android:inputType="textPassword"
+                android:textColor="@color/black"
                 android:textColorHint="@color/hint_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
